@@ -7,7 +7,7 @@
       <div class="tab-item">商家</div>
     </div>
     <div class="content">
-      i am content
+      i am content aaaaaaaa
     </div>
     <router-view/>
   </div>
