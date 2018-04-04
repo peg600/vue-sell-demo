@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-header></v-header>
+    <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
       <div class="tab-item">
         <router-link to="/goods">商品</router-link>
@@ -18,9 +18,26 @@
 
 <script>
   import vheader from './components/header/header.vue'
+  import axios from 'axios'
+
+  const ERR_OK = 0
 
   export default {
     name: 'App',
+    data() {
+      return {
+        seller:{}
+      }
+    },
+    created(){
+      axios.get('/api/seller').then((response) => {
+        response = response.data;
+        console.log(response);
+        if(response.errno === ERR_OK){     // 上面将0赋值给ERR_OK并在此处使用比直接用errno===0更易理解errno=0时的含义
+          this.seller = Object.assign({}, this.seller, response.data);
+        }
+      })
+    },
     components:{
      'v-header': vheader
   }

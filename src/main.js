@@ -3,8 +3,12 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router/index.js';
+import axios from 'axios';
 
 import './common/stylus/index.styl';
+
+Vue.use(router);
+
 
 /* eslint-disable no-new */
 new Vue({          //

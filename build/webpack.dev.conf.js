@@ -1,28 +1,23 @@
-'use strict'
-const utils = require('./utils')
-const webpack = require('webpack')
-const config = require('../config')
-const merge = require('webpack-merge')
-const path = require('path')
-const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const portfinder = require('portfinder')
-const express = require('express')
+'use strict';
+const utils = require('./utils');
+const webpack = require('webpack');
+const config = require('../config');
+const merge = require('webpack-merge');
+const path = require('path');
+const baseWebpackConfig = require('./webpack.base.conf');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
+const portfinder = require('portfinder');
+const express = require('express');
 
-const app = express()//请求server
+const appData = require('../static/data.json');//加载本地数据文件
+const seller = appData.seller;//获取对应的本地数据
+const goods = appData.goods;
+const ratings = appData.ratings;
 
-var appData = require('../data.json')//加载本地数据文件
-var seller = appData.seller//获取对应的本地数据
-var goods = appData.goods
-var ratings = appData.ratings
-
-var apiRoutes = express.Router()
-app.use('/api', apiRoutes)//通过路由请求数据
-
-const HOST = process.env.HOST
-const PORT = process.env.PORT && Number(process.env.PORT)
+const HOST = process.env.HOST;
+const PORT = process.env.PORT && Number(process.env.PORT);
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   module: {
