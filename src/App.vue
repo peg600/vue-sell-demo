@@ -34,7 +34,7 @@
         response = response.data;
         console.log(response);
         if(response.errno === ERR_OK){     // 上面将0赋值给ERR_OK并在此处使用比直接用errno===0更易理解errno=0时的含义
-          this.seller = Object.assign({}, this.seller, response.data);
+          this.seller = response.data;
         }
       })
     },
