@@ -1,17 +1,19 @@
 <template>
   <div class="star" :class="starType">
     <span v-for="itemClass in itemClasses" :class="itemClass" class="star-item"></span>
+    <!-- 遍历itemClasses数组，将其中每一项的值（itemClass）绑定到class，根据class选择span的背景图片为全星、半星或空星，
+    依次创建并渲染5个span -->
   </div>
 </template>
 
 <script>
-  const LENGTH = 5;
+  const LENGTH = 5;         // 定义评级的总星数
   const CLS_ON = "on";
   const CLS_HALF = "half";
   const CLS_OFF = "off";
     export default {
       name: "star",
-      props:{
+      props:{               // 传入应用的图标大小和评分数
         size:{
           type: Number
         },
@@ -21,9 +23,9 @@
       },
       computed:{
         starType() {
-          return "star-" + this.size;
+          return "star-" + this.size;       // 根据传入的大小拼接class并更改容器class，以使用不同的css
         },
-        itemClasses() {
+        itemClasses() {                      // 根据传入的评分计算有几个全星，是否有半星和空星（向下取整），形成数组
           let result = [];
           let score = (Math.floor(this.score*2))/2;
           let hasDecimal = score%1 !== 0;
@@ -55,7 +57,7 @@
     &.star-48
       .star-item
         width: 20px
-        height：20px
+        height: 20px
         margin-right: 22px
         background-size: 20px 20px
         &:last-child

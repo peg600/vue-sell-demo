@@ -37,6 +37,21 @@
       <div class="detail-wrapper clearfix">
         <div class="detail-main">
           <h1 class="name">{{seller.name}}</h1>
+          <div class="star-wrapper">
+            <!-- 设置一个div容器包含组件，通过容器来为组件设置样式 -->
+            <star :size="48" :score="seller.score"></star>
+          </div>
+          <div class="title">
+            <div class="line"></div>
+            <div class="text">优惠信息</div>
+            <div class="line"></div>
+          </div>
+          <ul v-if="seller.supports" class="supports">
+            <li class="support-item" v-for="(item,index) in seller.supports">
+              <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+              <span class="text">{{seller.supports[index].description}}</span>
+            </li>
+          </ul>
         </div>
       </div>
       <div class="detail-close">
@@ -47,6 +62,9 @@
 </template>
 
 <script>
+
+  import star from "../star/star"         // 引入star组件
+
     export default {
       name: "vheader",
       props:{
@@ -66,8 +84,10 @@
       },
       created() {
         this.classMap = ['decrease','discount','special','invoice','guarantee'];
+      },
+      components:{
+        star          // 注册star组件
       }
-
     }
 </script>
 
@@ -209,7 +229,23 @@
             text-align: center
             font-size: 16px
             font-weight: 700
-
+          .star-wrapper
+            margin-top: 18px
+            padding: 2px 0 2px 0
+            text-align: center
+          .title
+            display: flex                 // 设为flex布局，并制定宽度
+            width: 80%
+            margin: 28px auto 24px auto
+            .line
+              flex: 1                     // 在屏幕变宽时跟着变宽，默认值为0，即不放大
+              position: relative
+              top: -6px
+              border-bottom: 1px solid rgba(255,255,255,0.2)
+            .text
+              padding: 0 12px
+              font-size: 14px
+              font-weight: 700
 
       .detail-close
         position: relative
