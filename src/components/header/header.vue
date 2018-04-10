@@ -33,7 +33,16 @@
     <div class="background">
       <img :src="seller.avatar" width="100%" height="100%">
     </div>
-    <div class="detail" v-show="detailShow"></div>
+    <div class="detail" v-show="detailShow">
+      <div class="detail-wrapper clearfix">
+        <div class="detail-main">
+          <h1 class="name">{{seller.name}}</h1>
+        </div>
+      </div>
+      <div class="detail-close">
+        <i class="icon-close"></i>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -189,5 +198,24 @@
       height: 100%
       overflow: auto
       background: rgba(7,17,27,0.8)
+      .detail-wrapper              // 以下为实现sticky footer布局
+        min-height: 100%           // 关键：容器最小内容为100%，并被内容撑开高度
+        width: 100%
+        .detail-main
+          margin-top: 64px
+          padding-bottom: 64px     // 关键：为下方关闭按钮留出内部空间，使其不至于覆盖到内容上
+          .name
+            line-height: 16px
+            text-align: center
+            font-size: 16px
+            font-weight: 700
 
+
+      .detail-close
+        position: relative
+        width: 32px
+        height: 32px
+        margin: -64px auto 0 auto  // 关键：负padding值配合position:relative使此div覆盖到上方容器的空白处
+        clear: both
+        font-size: 32px
 </style>
