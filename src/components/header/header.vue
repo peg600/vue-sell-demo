@@ -33,31 +33,41 @@
     <div class="background">
       <img :src="seller.avatar" width="100%" height="100%">
     </div>
-    <div class="detail" v-show="detailShow">
-      <div class="detail-wrapper clearfix">
-        <div class="detail-main">
-          <h1 class="name">{{seller.name}}</h1>
-          <div class="star-wrapper">
+    <transition name="fade">
+      <div class="detail" v-show="detailShow">
+        <div class="detail-wrapper clearfix">
+          <div class="detail-main">
+            <h1 class="name">{{seller.name}}</h1>
+            <div class="star-wrapper">
             <!-- 设置一个div容器包含组件，通过容器来为组件设置样式 -->
-            <star :size="48" :score="seller.score"></star>
+              <star :size="48" :score="seller.score"></star>
+            </div>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">优惠信息</div>
+              <div class="line"></div>
+            </div>
+            <ul v-if="seller.supports" class="supports">
+              <li class="support-item" v-for="(item,index) in seller.supports">
+                <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+                <span class="text">{{seller.supports[index].description}}</span>
+              </li>
+            </ul>
+            <div class="title">
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
+            </div>
+            <div class="bulletin">
+              <p class="content">{{seller.bulletin}}</p>
+            </div>
           </div>
-          <div class="title">
-            <div class="line"></div>
-            <div class="text">优惠信息</div>
-            <div class="line"></div>
-          </div>
-          <ul v-if="seller.supports" class="supports">
-            <li class="support-item" v-for="(item,index) in seller.supports">
-              <span class="icon" :class="classMap[seller.supports[index].type]"></span>
-              <span class="text">{{seller.supports[index].description}}</span>
-            </li>
-          </ul>
+        </div>
+        <div class="detail-close" @click="hideDetail">
+          <i class="icon-close"></i>
         </div>
       </div>
-      <div class="detail-close">
-        <i class="icon-close"></i>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -79,7 +89,10 @@
       },
       methods:{
         showDetail() {
-          this.detailShow = true
+          this.detailShow = true;
+        },
+        hideDetail() {
+          this.detailShow = false;
         }
       },
       created() {
@@ -153,8 +166,6 @@
           .text
             line-height: 12px
             font-size: 10px
-
-
       .support-count
         position: absolute
         right: 12px
@@ -211,13 +222,20 @@
       filter: blur(10px)
     .detail
       position: fixed
+      z-index: 100
       top: 0
       left: 0
-      z-index: 100
       width: 100%
       height: 100%
       overflow: auto
-      background: rgba(7,17,27,0.8)
+      backdrop-filter: blur(10px)                 // 改背景模糊，仅IOS可显示
+      opacity: 1
+      background: rgba(7,17,27,0.8)               // detail已被transition标签包围，此处背景对动画中的enter阶段来说是结束
+      &.fade-enter-active, &.fade-leave-active    // 状态（v-enter-to），对leave阶段来说是开始状态（v-leave）
+        transition: all 0.5s                      // fade-xxx-active用于设置中间的动态部分
+      &.fade-enter, &.fade-leave-to               // fade-enter为enter阶段起点，fade-leave-to为leave阶段终点
+        opacity: 0
+        background: rgba(7,17,27,0)
       .detail-wrapper              // 以下为实现sticky footer布局
         min-height: 100%           // 关键：容器最小内容为100%，并被内容撑开高度
         width: 100%
@@ -246,7 +264,44 @@
               padding: 0 12px
               font-size: 14px
               font-weight: 700
+          .supports
+            width: 80%
+            margin: 0 auto
+            .support-item
+              padding: 0 12px
+              margin-bottom: 12px
+              font-size: 0
+              &:last-child
+                margin-bottom: 0
+              .icon
+                display: inline-block
+                width: 16px
+                height: 16px
+                vertical-align: top
+                margin-right: 16px
+                background-size: 16px 16px
+                background-repeat: no-repeat
+                &.decrease
+                  bg-image('decrease_2')
+                &.discount
+                  bg-image('discount_2')
+                &.guarantee
+                  bg-image('guarantee_2')
+                &.invoice
+                  bg-image('invoice_2')
+                &.special
+                  bg-image('special_2')
+              .text
+                line-height: 16px
+                font-size: 12px
 
+          .bulletin
+            width: 80%
+            margin: 0 auto
+            .content
+              padding: 0 12px
+              line-height: 24px
+              font-size: 12px
       .detail-close
         position: relative
         width: 32px
