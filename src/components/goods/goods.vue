@@ -6,6 +6,7 @@
     注：ref是作为渲染结果被创建的，渲染初期不存在也无法访问；$refs不是响应式的，不可用于数据绑定 -->
       <ul>
         <li v-for="(item,index) in goods" class="menu-item" :class="{'current': currentIndex===index}" ref="menuList">
+        <!-- 将当前li在goods中的index值和currentIndex()方法返回的i值比较，若相等则为当前li添加current类，显示为白色 -->
           <span class="text border-1px">
             <span class="icon" v-show="item.type>0" :class="classMap[item.type]"></span>
             {{item.name}}
@@ -64,7 +65,7 @@
         };
       },
       computed: {
-        currentIndex() {
+        currentIndex() {         // 轮流将listHeight数组中的高度值区间与当前纵坐标比较，返回当前区间号i
           for(let i=0;i<this.listHeight.length;i++) {
             let height1 = this.listHeight[i];
             let height2 = this.listHeight[i+1];
@@ -100,11 +101,11 @@
             probeType: 3
           });
 
-          this.foodsScroll.on('scroll',(pos) => {
-            this.scrollY = Math.abs(Math.round(pos.y));
+          this.foodsScroll.on('scroll',(pos) => {           // 当菜品栏触发滚动事件时，将纵坐标四舍五入并取绝对值
+            this.scrollY = Math.abs(Math.round(pos.y));     // 存入scrollY属性
           })
         },
-        _calculateHeight() {
+        _calculateHeight() {               // 计算每一个单元距离顶部的高度，存入数组listHeight
           let foodList = this.$refs.foodList;
           let height = 0;
           this.listHeight.push(height);
