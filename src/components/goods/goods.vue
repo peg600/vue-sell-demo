@@ -5,7 +5,8 @@
     如：father.$refs.子组件ref属性的值.子组件中的属性或方法。
     注：ref是作为渲染结果被创建的，渲染初期不存在也无法访问；$refs不是响应式的，不可用于数据绑定 -->
       <ul>
-        <li v-for="(item,index) in goods" class="menu-item" :class="{'current': currentIndex===index}" ref="menuList">
+        <li v-for="(item,index) in goods" class="menu-item" :class="{'current': currentIndex===index}" ref="menuList"
+        @click="selectMenu(index)">
         <!-- 将当前li在goods中的index值和currentIndex()方法返回的i值比较，若相等则为当前li添加current类，显示为白色 -->
           <span class="text border-1px">
             <span class="icon" v-show="item.type>0" :class="classMap[item.type]"></span>
@@ -69,7 +70,7 @@
           for(let i=0;i<this.listHeight.length;i++) {
             let height1 = this.listHeight[i];
             let height2 = this.listHeight[i+1];
-            if(!height2 || (this.scrollY > height1 && this.scrollY < height2)) {
+            if(!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
               return i;
             }
           }
@@ -91,6 +92,13 @@
         });
       },
       methods:{
+        selectMenu(index) {
+          let foodList = this.$refs.foodList;
+          let el = foodList[index];
+          this.foodsScroll.scrollToElement(el,300);
+
+        },
+
         _initScroll() {
           this.menuScroll = new BScroll(this.$refs.menuWrapper, {
             click: true
