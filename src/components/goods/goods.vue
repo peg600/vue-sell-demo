@@ -34,6 +34,9 @@
                   <span class="now">￥{{food.price}}</span>
                   <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
@@ -50,6 +53,7 @@
   import axios from 'axios';
   import BScroll from 'better-scroll';
   import shopcart from '../shopcart/shopcart';
+  import cartcontrol from '../cartcontrol/cartcontrol';
 
   const ERR_OK = 0;
 
@@ -127,7 +131,8 @@
         }
       },
       components: {
-        shopcart
+        shopcart,
+        cartcontrol
       }
     }
 </script>
@@ -237,28 +242,10 @@
               color: rgb(147,153,159)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          .cartcontrol-wrapper
+            position: absolute
+            right: 0
+            bottom: 12px
 
 
 
