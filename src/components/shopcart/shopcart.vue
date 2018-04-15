@@ -27,8 +27,7 @@
           default() {             // 当属性type为Array或Object时，default应为一个函数
             return [
               {
-                price: 10,
-                count: 2
+
               }
             ];
           }

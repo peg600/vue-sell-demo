@@ -43,7 +43,8 @@
         </li>
       </ul>
     </div>
-    <shopcart  :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <!-- 为组件传入参数时，参数名不可用通风命名法，要用中间带-的形式如select-foods -->
   </div>
 
 </template>
@@ -81,6 +82,17 @@
             }
           }
           return 0;
+        },
+        selectFoods() {                           // 先由App.vue从json中取得seller对象并传递给goods.vue;goods.vue又
+          let foods = [];                        // 遍历seller对象得到foods并继续遍历得到food对象并将其传递给
+          this.goods.forEach((good) => {         // cartcontrol.vue;cartcontrol.vue通过加减按钮为food对象添加count属性
+            good.foods.forEach((food) => {       // 并通过$emit回传给goods.vue;goods.vue根据count属性生成被选中的食物
+              if(food.count) {                   // 数组foods（select-foods）并和delivery-price，min-price一起传给组件
+                foods.push(food);                // shopcart.vue;shopcart.vue根据这些和food.count计算总价，显示不同样式
+              }
+            });
+          });
+          return foods;
         }
       },
       created() {
@@ -91,8 +103,8 @@
           if (response.errno === ERR_OK) {
             this.goods = response.data;
             this.$nextTick(() => {    // $nextTick会在下次DOM更新循环结束之后执行延迟回调，即this._initScroll会在DOM更新
-              this._initScroll();     // 后执行，避免初期渲染时就执行导致$refs中的内容无法访问
-              this._calculateHeight();
+              this._initScroll();     // 后执行，避免初期渲染时就执行导致$refs中的内容无法访问，操作相关原生dom的时候要
+              this._calculateHeight();// 在vue.$nextTick()中进行
             });
           }
         });
