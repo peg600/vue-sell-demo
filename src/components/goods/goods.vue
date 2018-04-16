@@ -35,7 +35,7 @@
                   <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
+                  <cartcontrol :food="food" @add="addFood"></cartcontrol>
                 </div>
               </div>
             </li>
@@ -43,8 +43,9 @@
         </li>
       </ul>
     </div>
-    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
-    <!-- 为组件传入参数时，参数名不可用通风命名法，要用中间带-的形式如select-foods -->
+    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" ref="shopcart">
+    </shopcart>
+    <!-- 为组件传入参数时，参数名不可用驼峰命名法，要用中间带-的形式如select-foods -->
   </div>
 
 </template>
@@ -114,23 +115,21 @@
           let foodList = this.$refs.foodList;
           let el = foodList[index];
           this.foodsScroll.scrollToElement(el,300);
-
         },
 
         _initScroll() {
           this.menuScroll = new BScroll(this.$refs.menuWrapper, {
             click: true
           });
-
           this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
             click: true,
             probeType: 3
           });
-
           this.foodsScroll.on('scroll',(pos) => {           // 当菜品栏触发滚动事件时，将纵坐标四舍五入并取绝对值
             this.scrollY = Math.abs(Math.round(pos.y));     // 存入scrollY属性
           })
         },
+
         _calculateHeight() {               // 计算每一个单元距离顶部的高度，存入数组listHeight
           let foodList = this.$refs.foodList;
           let height = 0;
@@ -140,6 +139,16 @@
             height += item.clientHeight;
             this.listHeight.push(height);
           }
+        },
+
+        addFood(target) {
+          this._drop(target);
+        },
+
+        _drop(target) {
+          this.$nextTick(() => {     // 异步执行小球动画，防止和减号图标滚动动画同时执行而卡顿
+            this.$refs.shopcart.drop(target);
+          });
         }
       },
       components: {

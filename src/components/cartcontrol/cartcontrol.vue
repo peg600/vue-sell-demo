@@ -46,7 +46,6 @@
           if(this.food.count) {
             this.food.count --;
           }
-          this.$emit('')
         }
       }
     }
