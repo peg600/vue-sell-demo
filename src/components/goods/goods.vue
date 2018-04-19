@@ -1,53 +1,55 @@
 <template>
-  <div class="goods">
-    <div class="menu-wrapper" ref="menuWrapper">
-    <!-- ref用于注册子组件或子元素，注册的组件将会出现在它的父组件的$refs对象中，父组件可通过$refs访问子组件和其中的数据
-    如：father.$refs.子组件ref属性的值.子组件中的属性或方法。
-    注：ref是作为渲染结果被创建的，渲染初期不存在也无法访问；$refs不是响应式的，不可用于数据绑定 -->
-      <ul>
-        <li v-for="(item,index) in goods" class="menu-item" :class="{'current': currentIndex===index}" ref="menuList"
-        @click="selectMenu(index)">
-        <!-- 将当前li在goods中的index值和currentIndex()方法返回的i值比较，若相等则为当前li添加current类，显示为白色 -->
-          <span class="text border-1px">
+  <div>
+    <div class="goods">
+      <div class="menu-wrapper" ref="menuWrapper">
+        <!-- ref用于注册子组件或子元素，注册的组件将会出现在它的父组件的$refs对象中，父组件可通过$refs访问子组件和其中的数据
+        如：father.$refs.子组件ref属性的值.子组件中的属性或方法。
+        注：ref是作为渲染结果被创建的，渲染初期不存在也无法访问；$refs不是响应式的，不可用于数据绑定 -->
+        <ul>
+          <li v-for="(item,index) in goods" class="menu-item" :class="{'current': currentIndex===index}" ref="menuList"
+              @click="selectMenu(index)">
+            <!-- 将当前li在goods中的index值和currentIndex()方法返回的i值比较，若相等则为当前li添加current类，显示为白色 -->
+            <span class="text border-1px">
             <span class="icon" v-show="item.type>0" :class="classMap[item.type]"></span>
             {{item.name}}
           </span>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="foods-wrapper" ref="foodsWrapper">
+        <ul>
+          <li v-for="item in goods" class="food-list" ref="foodList">
+            <h1 class="title">{{item.name}}</h1>
+            <ul>
+              <li v-for="food in item.foods" class="food-item border-1px)" @click="selectFood(food,$event)">
+                <div class="icon">
+                  <img :src="food.icon" width="57" height="57">
+                </div>
+                <div class="content">
+                  <h2 class="name">{{food.name}}</h2>
+                  <p class="desc">{{food.description}}</p>
+                  <div class="extra">
+                    <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
+                  </div>
+                  <div class="price">
+                    <span class="now">￥{{food.price}}</span>
+                    <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
+                  </div>
+                  <div class="cartcontrol-wrapper">
+                    <cartcontrol :food="food" @add="addFood"></cartcontrol>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" ref="shopcart">
+      </shopcart>
+      <!-- 为组件传入参数时，参数名不可用驼峰命名法，要用中间带-的形式如select-foods -->
     </div>
-    <div class="foods-wrapper" ref="foodsWrapper">
-      <ul>
-        <li v-for="item in goods" class="food-list" ref="foodList">
-          <h1 class="title">{{item.name}}</h1>
-          <ul>
-            <li v-for="food in item.foods" class="food-item border-1px)">
-              <div class="icon">
-                <img :src="food.icon" width="57" height="57">
-              </div>
-              <div class="content">
-                <h2 class="name">{{food.name}}</h2>
-                <p class="desc">{{food.description}}</p>
-                <div class="extra">
-                  <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
-                </div>
-                <div class="price">
-                  <span class="now">￥{{food.price}}</span>
-                  <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
-                </div>
-                <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food" @add="addFood"></cartcontrol>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-    <shopcart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" ref="shopcart">
-    </shopcart>
-    <!-- 为组件传入参数时，参数名不可用驼峰命名法，要用中间带-的形式如select-foods -->
+    <food :food="selectedFood" ref="food"></food>
   </div>
-
 </template>
 
 <script>
@@ -56,6 +58,7 @@
   import BScroll from 'better-scroll';
   import shopcart from '../shopcart/shopcart';
   import cartcontrol from '../cartcontrol/cartcontrol';
+  import food from '../food/food';
 
   const ERR_OK = 0;
 
@@ -70,7 +73,8 @@
         return {
           goods: [],
           listHeight: [],
-          scrollY: 0
+          scrollY: 0,
+          selectedFood: {}
         };
       },
       computed: {
@@ -112,12 +116,15 @@
       },
       methods:{
         selectMenu(index) {
+          if (!event._constructed) {
+            return;
+          }
           let foodList = this.$refs.foodList;
           let el = foodList[index];
           this.foodsScroll.scrollToElement(el,300);
         },
 
-        _initScroll() {
+        _initScroll() {      // 下划线开头的方法一般为私有方法，外部可能调用的方法命名时不带下划线
           this.menuScroll = new BScroll(this.$refs.menuWrapper, {
             click: true
           });
@@ -149,11 +156,19 @@
           this.$nextTick(() => {     // 异步执行小球动画，防止和减号图标滚动动画同时执行而卡顿
             this.$refs.shopcart.drop(target);
           });
+        },
+        selectFood(food,event) {
+          if (!event._constructed) {
+            return;
+          }
+          this.selectedFood = food;
+          this.$refs.food.show();
         }
       },
       components: {
         shopcart,
-        cartcontrol
+        cartcontrol,
+        food
       }
     }
 </script>
