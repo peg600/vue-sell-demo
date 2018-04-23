@@ -60,7 +60,7 @@
   </transition>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 
   import Vue from 'vue';
   import BScroll from 'better-scroll';
@@ -156,6 +156,9 @@
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+
+  @import "../../common/stylus/mixin.styl"
+
   .food
     position: fixed
     left: 0
