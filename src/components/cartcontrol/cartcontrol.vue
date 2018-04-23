@@ -36,9 +36,9 @@
           } else {                            // 不可添加与food属性同级的属性
             this.food.count++;
           }
-          this.$emit('add', event.target);    // $emit用于子组件触发父组件中定义的事件，并进一步执行与该事件绑定的方法，
-        },                                    // 会将第二个参数传入父组件的方法作为参数并执行
-                                              // 此处为触发goods组件中的add事件，并把event.target传入与之绑定的方法
+          this.$emit('add', event.target);    // $emit用于子组件触发父组件中定义的事件，触发的事件范围仅限于当前组件，且
+        },                                    // 只能被当前组件监听到。在父组件中，必须在子组件的标签上添加v-on才能监听
+                                              // 到子组件用$emit触发的事件，但后面执行的方法可以是父组件中定义的方法
         decreaseCart(event) {
           if(!event._constructed) {
             return;

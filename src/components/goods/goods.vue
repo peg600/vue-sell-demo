@@ -37,6 +37,8 @@
                   </div>
                   <div class="cartcontrol-wrapper">
                     <cartcontrol :food="food" @add="addFood"></cartcontrol>
+                    <!-- 此处监听的add事件来源于子组件中的$emit，只有将@add写在cartcontrol标签中才能监听到，但之后执行
+                     的addFood可以由父组件goods的methods定义-->
                   </div>
                 </div>
               </li>
@@ -48,7 +50,7 @@
       </shopcart>
       <!-- 为组件传入参数时，参数名不可用驼峰命名法，要用中间带-的形式如select-foods -->
     </div>
-    <food :food="selectedFood" ref="food"></food>
+    <food :food="selectedFood" ref="food" @add="addFood"></food>
   </div>
 </template>
 
@@ -150,6 +152,7 @@
 
         addFood(target) {
           this._drop(target);
+          console.log("a");
         },
 
         _drop(target) {
