@@ -20,7 +20,7 @@
   import vheader from './components/header/header.vue'
   import axios from 'axios'
 
-  const ERR_OK = 0
+  const ERR_OK = 0;
 
   export default {
     name: 'App',
@@ -32,7 +32,6 @@
     created(){
       axios.get('/api/seller').then((response) => {
         response = response.data;
-        console.log(response);
         if(response.errno === ERR_OK){     // 上面将0赋值给ERR_OK并在此处使用比直接用errno===0更易理解errno=0时的含义
           this.seller = response.data;
         }
@@ -48,20 +47,18 @@
 @import "./common/stylus/mixin.styl"
 
     .tab
-      display:flex
-      width :100%
-      height :40px
-      line-height :40px
+      display: flex
+      width: 100%
+      height: 40px
+      line-height: 40px
       border-1px(rgba(7,17,27,0.1))
       .tab-item
-        flex :1
-        text-align :center
+        flex: 1
+        text-align: center
         & > a
           display: block
           font-size: 14px
           color: rgb(77,85,93)
           &.active
-            color:rgb(240,20,20)
-
-
+            color: rgb(240,20,20)
 </style>
