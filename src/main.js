@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App';        // 导入当前目录的App文件为App
 import router from './router/index.js';
-import axios from 'axios';
+
 
 import './common/stylus/index.styl';
 

@@ -179,7 +179,6 @@
               let rect = ball.el.getBoundingClientRect();  // 返回一个DOMRect对象，包含left，right，top，bottom属性
               let x = rect.left - 32;                      // 均以视窗左边和上边为起点计算，滚动后值会立即改变
               let y = -(window.innerHeight - rect.top-22); // window.innerHeight为窗口高度
-              console.log(el,x,y,rect);
               el.style.display = '';
               el.style.webkitTransform = `translate3d(0,${y}px,0)`;
               el.style.transform = `translate3d(0,${y}px,0)`;

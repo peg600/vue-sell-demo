@@ -11,8 +11,8 @@ const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const portfinder = require('portfinder');
 const express = require('express');
 
-const appData = require('../static/data.json');//加载本地数据文件
-const seller = appData.seller;//获取对应的本地数据
+const appData = require('../static/data.json');      // 加载本地数据文件
+const seller = appData.seller;                       // 获取对应的本地数据
 const goods = appData.goods;
 const ratings = appData.ratings;
 
