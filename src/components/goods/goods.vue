@@ -104,7 +104,6 @@
       },
       created() {
         this.classMap = ['decrease','discount','special','invoice','guarantee'];
-
         axios.get('/api/goods').then((response) => {
           response = response.data;
           if (response.errno === ERR_OK) {
