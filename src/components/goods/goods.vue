@@ -152,7 +152,6 @@
 
         addFood(target) {
           this._drop(target);
-          console.log("a");
         },
 
         _drop(target) {
